@@ -1,0 +1,175 @@
+=========================================================
+GREENBONE CODING CHALLENGE – TEST CASES
+Tester: Vidyasagar Elango
+Application: Sauce Labs Demo Shop (https://www.saucedemo.com)
+=========================================================
+
+
+─────────────────────────────────────────
+SECTION 1 – 10 IDENTIFIED TEST CASES
+─────────────────────────────────────────
+
+TC-01  Test that standard_user can log in with correct credentials and is redirected to the inventory page.
+TC-02  Test that a logged-in user can complete the full purchase flow: add a product to the cart, fill in checkout details, and receive an order confirmation.
+TC-03  Test that adding a product to the cart increments the cart badge count correctly.
+TC-04  Test that locked_out_user cannot log in and sees a descriptive error message.
+TC-05  Test that products can be sorted by price (low to high) and are displayed in ascending price order.
+TC-06  Test that a user can remove an item from the cart and the cart badge count decrements accordingly.
+TC-07  Test that the checkout form cannot be submitted when required fields (first name, last name, postal code) are left empty.
+TC-08  Test that the product detail page displays the correct name, description, and price for a selected item.
+TC-09  Test that logging out returns the user to the login page and the authenticated session is cleared.
+TC-10  Test that cart items persist when the user navigates away from the cart back to the inventory page and returns.
+
+
+─────────────────────────────────────────
+SECTION 2 – DETAILED TEST CASE (TCMS FORMAT)
+─────────────────────────────────────────
+
+Test Case ID:     TC-02
+Title:            Complete end-to-end purchase flow results in order confirmation
+Module:           Checkout / E2E Purchase Flow
+Priority:         High
+Type:             Functional, End-to-End
+Status:           Ready for Automation
+
+Preconditions:
+  - Application is accessible at https://www.saucedemo.com
+  - standard_user account is active (username: standard_user, password: secret_sauce)
+  - No items already in the cart (fresh session or reset state)
+
+Test Steps:
+  Step 1 – Navigate to https://www.saucedemo.com
+    Expected: Login page is displayed with username, password fields and login button visible.
+
+  Step 2 – Enter username "standard_user" and password "secret_sauce", click Login
+    Expected: User is redirected to the inventory page (/inventory.html).
+              Page title "Swag Labs" and a list of products are visible.
+
+  Step 3 – Click "Add to cart" on the first product (Sauce Labs Backpack)
+    Expected: Cart badge appears in the header showing count "1".
+              Button label changes from "Add to cart" to "Remove".
+
+  Step 4 – Click the cart icon in the top-right header
+    Expected: Cart page (/cart.html) is displayed.
+              The added product appears in the cart with correct name and price.
+              "Checkout" button is visible.
+
+  Step 5 – Click "Checkout"
+    Expected: Checkout step 1 page (/checkout-step-one.html) is displayed.
+              Input fields for First Name, Last Name, and Postal Code are visible.
+
+  Step 6 – Enter "Test" in First Name, "User" in Last Name, "12345" in Postal Code, click "Continue"
+    Expected: Checkout step 2 (overview) page (/checkout-step-two.html) is displayed.
+              The item name, item price, and order total are visible and correct.
+              Payment information and shipping information summaries are visible.
+
+  Step 7 – Click "Finish"
+    Expected: Order confirmation page (/checkout-complete.html) is displayed.
+              Confirmation header reads "Thank you for your order!".
+              Subtext confirms the order has been dispatched.
+
+Postconditions:
+  - Cart is empty after successful checkout.
+  - User is on the checkout-complete page.
+
+Test Data:
+  | Field       | Value          |
+  | username    | standard_user  |
+  | password    | secret_sauce   |
+  | firstName   | Test           |
+  | lastName    | User           |
+  | postalCode  | 12345          |
+
+Out of Scope:
+  - Email confirmation
+  - Inventory stock levels
+  - Payment processing (demo app, no real payment)
+
+Notes:
+  - This test covers the critical revenue path. Any failure here represents a complete blockage
+    of the core business function and should be treated as a P0 defect.
+
+
+─────────────────────────────────────────
+SECTION 3 – PRIORITISED TEST CASES
+─────────────────────────────────────────
+
+Priority 1 – TC-01: Login with valid credentials
+  Reason: Authentication is the gateway to the entire application. Every other test case
+  depends on a successful login. A broken login means no user can access any feature —
+  immediate P0 impact across all user journeys.
+
+Priority 2 – TC-02: Complete end-to-end purchase flow
+  Reason: This is the core business-critical path. It covers add-to-cart → checkout →
+  confirmation in a single flow. If any step is broken, revenue generation stops entirely.
+  Highest business risk if not caught.
+
+Priority 3 – TC-03: Add product to cart updates cart badge count
+  Reason: Adding to cart is the most common user action and a prerequisite for checkout.
+  A bug here (silent failure, wrong count) directly affects conversion. Isolated from the
+  full checkout flow so failures are easy to pinpoint.
+
+Priority 4 – TC-06: Remove item from cart
+  Reason: Cart management is a critical user action — users routinely change their minds.
+  A broken remove function leads to frustration and cart abandonment. Paired naturally
+  with add-to-cart.
+
+Priority 5 – TC-07: Checkout form validation (empty required fields)
+  Reason: Form validation prevents bad data from entering the checkout flow. An absent
+  validation could allow incomplete orders through, causing downstream processing errors.
+  Important for data integrity and UX.
+
+Priority 6 – TC-04: locked_out_user sees error message on login
+  Reason: Security and access control — the app must correctly block restricted users
+  and communicate why. A missing or misleading error could confuse support teams or
+  indicate a broken access-control mechanism.
+
+Priority 7 – TC-05: Sort products by price (low to high)
+  Reason: Sorting is a usability feature that improves discoverability and conversion.
+  A broken sort order leads to user confusion but doesn't block purchases. Medium risk.
+
+Priority 8 – TC-08: Product detail page shows correct information
+  Reason: Incorrect product data (wrong price, description mismatch) could mislead
+  buyers, but the user can still complete a purchase. Important for data integrity but
+  lower blast radius than core flow failures.
+
+Priority 9 – TC-09: Logout clears session and returns to login page
+  Reason: Session management is important for security (especially on shared devices)
+  but failure here is less immediately disruptive to active users. Still important for
+  compliance and security posture.
+
+Priority 10 – TC-10: Cart persists items when navigating away and back
+  Reason: State persistence is expected behaviour but edge-case relative to the happy
+  path. A bug here is noticeable but unlikely to completely block a purchase. Lowest
+  risk among the identified cases.
+
+
+─────────────────────────────────────────
+SECTION 4 – FUTURE PLANS (Optional)
+─────────────────────────────────────────
+
+1. Expand test coverage to all remaining test cases (TC-04 through TC-10).
+
+2. Add data-driven login tests covering all user types:
+   standard_user, locked_out_user, problem_user, performance_glitch_user —
+   asserting the correct outcome for each.
+
+3. Introduce visual regression testing (Playwright snapshots or Percy) to catch
+   UI regressions that functional assertions miss, such as the known visual bugs
+   exposed by the problem_user account.
+
+4. Add API-level test hooks: if a backend API is available, reset cart state and
+   session state via API in beforeEach rather than relying on UI navigation,
+   improving test speed and reliability.
+
+5. Integrate with a CI/CD pipeline (GitHub Actions) to run tests on every pull
+   request with Allure or HTML report publishing.
+
+6. Add Playwright trace collection on failure and screenshot upload to a shared
+   storage bucket for easier remote debugging.
+
+7. Parameterise the base URL and credentials via environment variables to support
+   testing against staging and production environments without code changes.
+
+8. Add accessibility checks using axe-playwright to catch a11y regressions
+   alongside functional test runs.

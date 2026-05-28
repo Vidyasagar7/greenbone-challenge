@@ -1,0 +1,44 @@
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+
+  // Run tests in parallel within each file
+  fullyParallel: true,
+
+  // Fail the build on CI if test.only is accidentally left in
+  forbidOnly: !!process.env.CI,
+
+  // Retry on CI to reduce flakiness from network variance
+  retries: process.env.CI ? 2 : 0,
+
+  // Limit workers on CI to reduce load; unlimited locally
+  workers: process.env.CI ? 1 : undefined,
+
+  reporter: [['html', { open: 'never' }], ['list']],
+
+  use: {
+    // All tests target the Sauce Labs demo app
+    baseURL: 'https://www.saucedemo.com',
+
+    // saucedemo uses data-test="..." rather than the Playwright default data-testid
+    testIdAttribute: 'data-test',
+
+    // Collect trace on first retry to aid debugging
+    trace: 'on-first-retry',
+
+    // Screenshot on failure for visibility
+    screenshot: 'only-on-failure',
+  },
+
+  projects: [
+    {
+      // Primary: Chromium — the most widely used browser and best supported by Playwright
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    // Uncomment to add cross-browser coverage:
+    // { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    // { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
+});
