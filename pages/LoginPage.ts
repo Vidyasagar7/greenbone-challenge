@@ -1,9 +1,5 @@
 import { Page, Locator } from '@playwright/test';
 
-/**
- * LoginPage encapsulates all interactions with the Sauce Labs login screen.
- * Uses stable data-test attributes as selectors throughout.
- */
 export class LoginPage {
   readonly page: Page;
   readonly usernameInput: Locator;

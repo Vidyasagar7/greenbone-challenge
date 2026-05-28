@@ -3,12 +3,6 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
 
-/**
- * TC-03 – Add product to cart updates cart badge count
- *
- * Priority 3: Adding to cart is the most common user action and the
- * prerequisite for any purchase. A silent failure here directly affects conversion.
- */
 test.describe('Cart', () => {
   let inventoryPage: InventoryPage;
   let cartPage: CartPage;

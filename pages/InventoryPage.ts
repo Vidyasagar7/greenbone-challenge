@@ -2,9 +2,6 @@ import { Page, Locator } from '@playwright/test';
 
 export type SortOption = 'az' | 'za' | 'lohi' | 'hilo';
 
-/**
- * InventoryPage encapsulates all interactions with the product listing page (/inventory.html).
- */
 export class InventoryPage {
   readonly page: Page;
   readonly cartBadge: Locator;
@@ -14,12 +11,12 @@ export class InventoryPage {
   readonly itemPrices: Locator;
 
   constructor(page: Page) {
-    this.page           = page;
-    this.cartBadge      = page.getByTestId('shopping-cart-badge');
-    this.cartLink       = page.getByTestId('shopping-cart-link');
-    this.sortDropdown   = page.getByTestId('product-sort-container');
+    this.page = page;
+    this.cartBadge = page.getByTestId('shopping-cart-badge');
+    this.cartLink = page.getByTestId('shopping-cart-link');
+    this.sortDropdown = page.getByTestId('product-sort-container');
     this.inventoryItems = page.getByTestId('inventory-item');
-    this.itemPrices     = page.getByTestId('inventory-item-price');
+    this.itemPrices = page.getByTestId('inventory-item-price');
   }
 
   /** Returns the current cart item count shown in the badge, or 0 if badge is not visible */
@@ -60,11 +57,14 @@ export class InventoryPage {
   /** Returns all visible item prices as numbers, in DOM order */
   async getItemPrices(): Promise<number[]> {
     const priceTexts = await this.itemPrices.allTextContents();
-    return priceTexts.map(t => parseFloat(t.replace('$', '')));
+    return priceTexts.map((t) => parseFloat(t.replace('$', '')));
   }
 
   /** Converts a product display name to the kebab-case format used in data-test attributes */
   private slugify(name: string): string {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
   }
 }

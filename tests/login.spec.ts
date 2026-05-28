@@ -1,12 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 
-/**
- * TC-01 – Login with valid credentials
- *
- * Priority 1: Authentication is the gateway to the entire application.
- * A broken login blocks all user journeys — immediate P0 impact.
- */
 test.describe('Login', () => {
   let loginPage: LoginPage;
 
@@ -15,7 +9,9 @@ test.describe('Login', () => {
     await loginPage.navigate();
   });
 
-  test('TC-01 standard_user logs in with correct credentials and lands on inventory page', async ({ page }) => {
+  test('TC-01 standard_user logs in with correct credentials and lands on inventory page', async ({
+    page,
+  }) => {
     await loginPage.login('standard_user', 'secret_sauce');
 
     // Verify the user is redirected to the inventory page

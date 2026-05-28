@@ -4,13 +4,6 @@ import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
 import { CheckoutPage, CustomerInfo } from '../pages/CheckoutPage';
 
-/**
- * TC-02 – Complete end-to-end purchase flow
- *
- * Priority 2: The core business-critical path. A failure anywhere in this
- * flow means the application cannot generate revenue. Highest business risk.
- */
-
 const TEST_CUSTOMER: CustomerInfo = {
   firstName: 'Test',
   lastName: 'User',
@@ -30,11 +23,13 @@ test.describe('Checkout', () => {
     await expect(page).toHaveURL(/inventory\.html/);
 
     inventoryPage = new InventoryPage(page);
-    cartPage      = new CartPage(page);
-    checkoutPage  = new CheckoutPage(page);
+    cartPage = new CartPage(page);
+    checkoutPage = new CheckoutPage(page);
   });
 
-  test('TC-02 user can complete the full purchase flow and receives order confirmation', async ({ page }) => {
+  test('TC-02 user can complete the full purchase flow and receives order confirmation', async ({
+    page,
+  }) => {
     // Step 1: Add a product to the cart
     await inventoryPage.addItemToCart('sauce-labs-backpack');
     expect(await inventoryPage.getCartCount()).toBe(1);
@@ -67,7 +62,9 @@ test.describe('Checkout', () => {
     expect(confirmationHeader).toBe('Thank you for your order!');
   });
 
-  test('checkout form shows error when first name is missing', async ({ page }) => {
+  test('checkout form shows error when first name is missing', async ({
+    page,
+  }) => {
     await inventoryPage.addItemToCart('sauce-labs-backpack');
     await inventoryPage.goToCart();
     await cartPage.checkout();
@@ -80,24 +77,36 @@ test.describe('Checkout', () => {
     expect(error).toContain('First Name is required');
   });
 
-  test('checkout form shows error when last name is missing', async ({ page }) => {
+  test('checkout form shows error when last name is missing', async ({
+    page,
+  }) => {
     await inventoryPage.addItemToCart('sauce-labs-backpack');
     await inventoryPage.goToCart();
     await cartPage.checkout();
 
-    await checkoutPage.fillPersonalInfo({ firstName: 'Test', lastName: '', postalCode: '12345' });
+    await checkoutPage.fillPersonalInfo({
+      firstName: 'Test',
+      lastName: '',
+      postalCode: '12345',
+    });
     await checkoutPage.continue();
 
     const error = await checkoutPage.getErrorMessage();
     expect(error).toContain('Last Name is required');
   });
 
-  test('checkout form shows error when postal code is missing', async ({ page }) => {
+  test('checkout form shows error when postal code is missing', async ({
+    page,
+  }) => {
     await inventoryPage.addItemToCart('sauce-labs-backpack');
     await inventoryPage.goToCart();
     await cartPage.checkout();
 
-    await checkoutPage.fillPersonalInfo({ firstName: 'Test', lastName: 'User', postalCode: '' });
+    await checkoutPage.fillPersonalInfo({
+      firstName: 'Test',
+      lastName: 'User',
+      postalCode: '',
+    });
     await checkoutPage.continue();
 
     const error = await checkoutPage.getErrorMessage();

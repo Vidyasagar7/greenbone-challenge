@@ -1,8 +1,5 @@
 import { Page, Locator } from '@playwright/test';
 
-/**
- * CartPage encapsulates all interactions with the cart page (/cart.html).
- */
 export class CartPage {
   readonly page: Page;
   readonly cartItems: Locator;
@@ -10,9 +7,9 @@ export class CartPage {
   readonly continueShoppingButton: Locator;
 
   constructor(page: Page) {
-    this.page                   = page;
-    this.cartItems              = page.getByTestId('inventory-item');
-    this.checkoutButton         = page.getByTestId('checkout');
+    this.page = page;
+    this.cartItems = page.getByTestId('inventory-item');
+    this.checkoutButton = page.getByTestId('checkout');
     this.continueShoppingButton = page.getByTestId('continue-shopping');
   }
 

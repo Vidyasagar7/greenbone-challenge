@@ -6,12 +6,6 @@ export interface CustomerInfo {
   postalCode: string;
 }
 
-/**
- * CheckoutPage covers the two-step checkout flow:
- *   Step 1: /checkout-step-one.html  – personal information form
- *   Step 2: /checkout-step-two.html  – order overview and finish
- *   Complete: /checkout-complete.html – order confirmation
- */
 export class CheckoutPage {
   readonly page: Page;
 
@@ -33,15 +27,15 @@ export class CheckoutPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.firstNameInput   = page.getByTestId('firstName');
-    this.lastNameInput    = page.getByTestId('lastName');
-    this.postalCodeInput  = page.getByTestId('postalCode');
-    this.continueButton   = page.getByTestId('continue');
-    this.errorMessage     = page.getByTestId('error');
+    this.firstNameInput = page.getByTestId('firstName');
+    this.lastNameInput = page.getByTestId('lastName');
+    this.postalCodeInput = page.getByTestId('postalCode');
+    this.continueButton = page.getByTestId('continue');
+    this.errorMessage = page.getByTestId('error');
 
-    this.finishButton     = page.getByTestId('finish');
-    this.itemTotal        = page.getByTestId('subtotal-label');
-    this.summaryItems     = page.getByTestId('inventory-item');
+    this.finishButton = page.getByTestId('finish');
+    this.itemTotal = page.getByTestId('subtotal-label');
+    this.summaryItems = page.getByTestId('inventory-item');
 
     this.confirmationHeader = page.getByTestId('complete-header');
   }
