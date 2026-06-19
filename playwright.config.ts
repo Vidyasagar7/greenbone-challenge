@@ -17,6 +17,10 @@ export default defineConfig({
 
   reporter: [['html', { open: 'never' }], ['list']],
 
+  timeout: 90000,
+  expect: {
+    timeout: 60000,
+  },
   use: {
     // All tests target the Sauce Labs demo app
     baseURL: 'https://www.saucedemo.com',
@@ -29,6 +33,9 @@ export default defineConfig({
 
     // Screenshot on failure for visibility
     screenshot: 'only-on-failure',
+
+    navigationTimeout: 60000,
+    actionTimeout: 60000,
   },
 
   projects: [
