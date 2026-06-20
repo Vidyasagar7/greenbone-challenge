@@ -43,4 +43,21 @@ test.describe('Login', () => {
     const errorText = await loginPage.getErrorMessage();
     expect(errorText).toContain('Username and password do not match');
   });
+
+  test('Iframe example', async ({ page }) => {
+    await loginPage.login('standard_user', 'secret_sauce');
+
+    // Verify the user is redirected to the inventory page
+    await expect(page).toHaveURL(/inventory\.html/);
+
+    // Verify the Iframe is present and has the correct title
+    const iframe = page.frameLocator('iframe#example-iframe');
+    const frameLocator = page.frameLocator('iframe[title= "Example Iframe"]');
+    await expect(iframe.locator('h1')).toHaveText('Example Iframe');
+
+    await expect(iframe.locator('p')).toHaveText(
+      'This is an example iframe for testing purposes.',
+    );
+    await iframe.locator('a').click();
+  });
 });

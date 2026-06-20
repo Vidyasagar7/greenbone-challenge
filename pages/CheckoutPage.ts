@@ -27,7 +27,8 @@ export class CheckoutPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.firstNameInput = page.getByTestId('firstName');
+    //this.firstNameInput = page.getByTestId('firstName');
+    this.firstNameInput = page.getByRole('textbox', { name: 'First Name' });
     this.lastNameInput = page.getByTestId('lastName');
     this.postalCodeInput = page.getByTestId('postalCode');
     this.continueButton = page.getByTestId('continue');

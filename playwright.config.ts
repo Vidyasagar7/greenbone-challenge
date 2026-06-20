@@ -42,10 +42,24 @@ export default defineConfig({
     {
       // Primary: Chromium — the most widely used browser and best supported by Playwright
       name: 'chromium',
+      // Only match spec files directly in tests/ — the tests/api/ subdirectory is
+      // handled by the api project below so it gets the correct baseURL.
+      testMatch: '**/tests/*.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
     // Uncomment to add cross-browser coverage:
     // { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
     // { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+
+    {
+      // API tests use Playwright's request fixture (no browser process spawned).
+      // The baseURL here overrides the global one so every client call in
+      // tests/api/ resolves against JSONPlaceholder automatically.
+      name: 'api',
+      testDir: './tests/api',
+      use: {
+        baseURL: 'https://jsonplaceholder.typicode.com',
+      },
+    },
   ],
 });
